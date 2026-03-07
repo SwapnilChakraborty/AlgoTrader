@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AlgoMarket - TradingView Indicator SaaS
 
-## Getting Started
+A production-ready SaaS marketplace for buying and selling TradingView invite-only indicators with automated subscription access.
 
-First, run the development server:
+## Features
+- **Multi-Vendor Marketplace**: Anyone can list an indicator. Traders can subscribe.
+- **Automated TradingView Access**: No manual intervention needed to grant/revoke access.
+- **Node-Cron Background Workers**: Fully scalable DB-backed job queue replaces Redis.
+- **Premium Fintech UI**: Built with Tailwind CSS and Next.js 14 App Router.
+
+---
+
+## 🚀 Deployment Guide
+
+### Prerequisites
+- Docker Engine & Docker Compose
+- Node.js 18+ (for local development)
+- PostgreSQL (or use the provided `docker-compose.yml`)
+
+### 1. Environment Setup
+Copy the `.env.example` (or `.env` generated) to `.env` on your production server.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+DATABASE_URL="postgresql://postgres:password@postgres:5432/tv_saas?schema=public"
+NEXTAUTH_SECRET="your_secure_random_string"
+NEXTAUTH_URL="https://yourdomain.com"
+PAYMENT_WEBHOOK_SECRET="your_razorpay_webhook_secret"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Deploy with Docker Compose
+The system is fully dockerized. The `docker-compose.yml` spins up:
+1. PostgreSQL Database
+2. Next.js Web App
+3. Node-Cron Background Worker
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Run the following command in the root directory:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+docker-compose up -d --build
+```
 
-## Learn More
+### 3. Database Migrations
+Once the database container is running, execute the Prisma migrations to create the tables:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Run this inside the app container or locally pointing to the DB
+npx prisma db push
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Alternatively, wait for the app container to start and run:
+docker exec -it tv_saas_app npx prisma db push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Technical Stack
+- **Frontend**: Next.js 14, Tailwind CSS, Lucide Icons
+- **Backend**: Next.js Server Actions & API Routes, Node.js Cron Worker
+- **Database**: PostgreSQL with Prisma ORM
+- **Auth**: NextAuth.js (Credentials + bcrypt)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Background Processing Architecture
+Instead of Redis + BullMQ, this system uses a table (`jobs`) in PostgreSQL. 
+The standalone `worker.ts` script runs via `node-cron` every minute, polling for `PENDING` jobs, granting access to TradingView via the pseudo-API, and handling retries intelligently. It also runs a daily cron job to cleanup expired subscriptions automatically.
