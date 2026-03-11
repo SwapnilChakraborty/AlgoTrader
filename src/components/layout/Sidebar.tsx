@@ -9,7 +9,6 @@ import {
     Zap,
     History,
     Users,
-    ShieldCheck,
     Crown,
     Sparkles,
     LogOut,
@@ -40,7 +39,6 @@ export function Sidebar({ role }: { role: string }) {
         { href: "/admin/users", icon: <Users className="w-5 h-5" />, label: "Population Control" },
         { href: "/admin/payments", icon: <ShoppingCart className="w-5 h-5" />, label: "Fiat Gateway" },
         { href: "/admin/sales-leads", icon: <Globe className="w-5 h-5" />, label: "Alpha Leads" },
-        { href: "/admin/vendor-approvals", icon: <ShieldCheck className="w-5 h-5" />, label: "Elite Approvals" },
         { href: "/admin/logs", icon: <History className="w-5 h-5" />, label: "System Matrix" },
     ];
 
@@ -110,25 +108,7 @@ export function Sidebar({ role }: { role: string }) {
                     </div>
                 )}
 
-                {role === "PENDING_VENDOR" && (
-                    <div className="space-y-4">
-                        <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.4em] mb-4 pl-4">Verification</h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/vendor/setup"
-                                    className={`flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 group ${pathname === "/vendor/setup"
-                                        ? "bg-gold/10 text-gold shadow-[inset_0_0_20px_rgba(212,175,55,0.05)] border border-gold/20"
-                                        : "text-zinc-500 hover:text-white hover:bg-zinc-900"
-                                        }`}
-                                >
-                                    <Settings className={`w-5 h-5 ${pathname === "/vendor/setup" ? "text-gold" : "text-zinc-600 group-hover:text-gold"}`} />
-                                    <span className={`text-sm font-bold uppercase tracking-widest ${pathname === "/vendor/setup" ? "text-white" : ""}`}>Complete Setup</span>
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                )}
+
 
                 {role === "ADMIN" && (
                     <div className="space-y-4">

@@ -16,8 +16,6 @@ export default async function DashboardRedirect() {
         redirect("/admin/dash");
     } else if (session.user.role === "VENDOR") {
         redirect("/vendor/indicators");
-    } else if (session.user.role === "PENDING_VENDOR") {
-        redirect("/vendor/setup");
     } else {
         redirect("/user/dash"); // Normal user/trader route
     }

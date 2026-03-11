@@ -1,46 +1,26 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: tv_saas_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: tv_saas
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
-
   # Next.js Application
   app:
     build:
       context: .
       target: runner
-    container_name: tv_saas_app
+    container_name: algomarket_app
     ports:
       - "3000:3000"
+    env_file: .env
     environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/tv_saas?schema=public
       - NODE_ENV=production
-    depends_on:
-      - postgres
     restart: always
 
-  # Background Worker (node-cron)
+  # Background Worker (Puppeteer + node-cron)
   worker:
     build:
       context: .
       target: worker
-    container_name: tv_saas_worker
+    container_name: algomarket_worker
+    env_file: .env
     environment:
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/tv_saas?schema=public
       - NODE_ENV=production
-    depends_on:
-      - postgres
     restart: always
-
-volumes:
-  postgres_data:

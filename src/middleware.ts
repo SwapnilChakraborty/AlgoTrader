@@ -21,15 +21,6 @@ export default withAuth(
 
         // RBAC Checks
         if (path.startsWith("/vendor")) {
-            // Allow PENDING_VENDOR to only reach /vendor/setup
-            if (token?.role === "PENDING_VENDOR") {
-                if (path !== "/vendor/setup") {
-                    return NextResponse.redirect(new URL("/vendor/setup", req.url));
-                }
-                return null;
-            }
-
-            // Standard Vendor/Admin checks
             if (token?.role !== "VENDOR" && token?.role !== "ADMIN") {
                 return NextResponse.redirect(new URL("/dashboard", req.url));
             }

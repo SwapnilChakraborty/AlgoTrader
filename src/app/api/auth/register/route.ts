@@ -29,13 +29,13 @@ export async function POST(req: Request) {
 
         const passwordHash = await bcrypt.hash(password, 10);
 
-        const assignedRole = role === "VENDOR" ? "PENDING_VENDOR" : "USER";
+        const assignedRole = role === "VENDOR" ? "VENDOR" : "USER";
 
         const userRef = adminDb.collection("users").doc();
         await userRef.set({
             email,
             passwordHash,
-            role: assignedRole as "USER" | "VENDOR" | "PENDING_VENDOR",
+            role: assignedRole as "USER" | "VENDOR" | "ADMIN",
             createdAt: new Date(),
             updatedAt: new Date()
         });

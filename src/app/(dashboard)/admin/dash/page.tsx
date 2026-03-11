@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { adminDb } from "@/lib/firebase/admin";
 import { redirect } from "next/navigation";
-import { Activity, Users, ShoppingCart, ShieldCheck, TrendingUp, ArrowUpRight, ArrowDownRight, Zap, History, CreditCard } from "lucide-react";
+import { Activity, Users, ShoppingCart, TrendingUp, ArrowUpRight, ArrowDownRight, Zap, History, CreditCard } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
@@ -137,15 +137,7 @@ export default async function AdminDashboardPage() {
                                 </div>
                             </button>
                         </Link>
-                        <Link href="/admin/vendor-approvals">
-                            <button className="w-full p-5 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center gap-4 hover:border-gold/30 hover:bg-gold/5 transition-all text-left group">
-                                <ShieldCheck className="w-6 h-6 text-emerald-500 group-hover:scale-110 transition-transform" />
-                                <div>
-                                    <p className="text-sm font-bold text-white uppercase tracking-tight">Elite Approvals</p>
-                                    <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest">Vendor Access Grants</p>
-                                </div>
-                            </button>
-                        </Link>
+
                         <Link href="/admin/logs">
                             <button className="w-full p-5 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center gap-4 hover:border-gold/30 hover:bg-gold/5 transition-all text-left group">
                                 <History className="w-6 h-6 text-zinc-500 group-hover:scale-110 transition-transform" />
